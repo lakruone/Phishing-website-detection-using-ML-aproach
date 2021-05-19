@@ -1,11 +1,8 @@
 import re
-import requests
 import pandas as pd
 import csv
 import os
-
-# url =input("Please Enter the URL and press enter to proceed : ")
-
+import whois
 
 output = os.path.join('output.csv')
 urlinput = pd.read_csv('links.csv')
@@ -17,23 +14,22 @@ f.writerow(["URL", "abnormal"])
 for i in range(0,len(urlinput)):
     url = urlinput.loc[i,'url']
 
-    # Stores the response of the given URL
     try:
-        response = requests.get(url)
-    except:
+        response = whois.whois(url)
+    except Exception as e:
         response = ""
         # raise
 
     if response != "" :
-        if response.text == "":
+        if response.domain_name :
             result = 1
         else:
             result = -1
     else:
         result = "N/A"
-
-
-
+    #
+    #
+    #
     f.writerow([url,result])
     print(str(i)+" - Response : "+str(result)+" - "+url)
 
